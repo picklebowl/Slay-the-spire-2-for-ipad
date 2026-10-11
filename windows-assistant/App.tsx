@@ -6,6 +6,8 @@ import { openUrl } from '@tauri-apps/plugin-opener';
 import { load } from '@tauri-apps/plugin-store';
 import { AppleID } from './AppleID';
 import { Device, DeviceInfo } from './Device';
+import { useError } from './ErrorContext';
+import { AppError, isErrorVariant } from './errors';
 import './Sts2Assistant.css';
 
 type Mode = 'install' | 'renew';
@@ -16,6 +18,7 @@ const action = (name: string, args: Record<string, unknown> = {}) => invoke<Repo
 });
 
 export default function App() {
+  const { err } = useError();
   const [loggedInAs, setLoggedInAs] = useState<string | null>(null);
   const [device, setDevice] = useState<DeviceInfo | null>(null);
   const [noKeyring, setNoKeyring] = useState(false);
@@ -43,7 +46,10 @@ export default function App() {
   }, []);
 
   const fail = (e: unknown) => {
-    setError(true);setMessage(typeof e === 'string' ? e : '操作未完成，请检查网络、USB 连接和设备解锁状态后重试。');
+    setError(true);
+    if (e && typeof e === 'object' && 'type' in e && 'message' in e && typeof e.type === 'string' && isErrorVariant(e.type) && typeof e.message === 'string') {
+      setMessage(err('签名或安装未完成，请查看错误说明后重试。', e as AppError));
+    } else setMessage(typeof e === 'string' ? e : '操作未完成，请检查网络、USB 连接和设备解锁状态后重试。');
     setPending(null);setProgress(null);
   };
 
@@ -84,7 +90,7 @@ export default function App() {
     try {
       if (target.connectionType!=='USB' || !udid) throw '请选择通过 USB 连接的 iPad；不使用无线设备。';
       const prefs=await load('preferences.json');const original=await prefs.get<string>('sts2Account');
-      if (job.mode==='renew' && original && original!==account) throw '续签必须使用上次安装的 Apple 账号。请切回原账号，再点击续签。';
+      if (job.mode==='renew' && original && original.toLowerCase()!==account.toLowerCase()) throw '续签必须使用上次安装的 Apple 账号。请切回原账号，再点击续签。';
       setStage(3);setMessage('正在检查 iPad，并在覆盖安装前备份现有存档。请保持接线。');
       const before=await action('inspect',{udid});
       if (job.mode==='renew' && !before.installed) throw 'iPad 尚未安装本项目游戏，请使用“一键安装”。';
