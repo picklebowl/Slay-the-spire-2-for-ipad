@@ -35,6 +35,11 @@ jobs:
           git -C assistant-source checkout dc396af059fd46982062cd8fc90252d7e27085e9
           python windows-assistant/apply_fork.py assistant-source
           if ($LASTEXITCODE -ne 0) { throw 'Upstream patch failed' }
+      - name: Cache native signing dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: assistant-source/src-tauri -> target
+          cache-on-failure: true
       - name: Download validated private game build
         shell: pwsh
         run: |
@@ -85,12 +90,18 @@ jobs:
           }
           gh release upload game-build-v0.111.0 ipa-input/StS2-iPad-unsigned.ipa ipa-input/cs_paths.txt --repo $env:GITHUB_REPOSITORY --clobber
           if ($LASTEXITCODE -ne 0) { throw 'Private build preservation failed' }
-          gh release view assistant-v0.1.0 --repo $env:GITHUB_REPOSITORY 2>$null
+          $current = gh api "repos/$env:GITHUB_REPOSITORY/commits/main" --jq .sha
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot verify release source revision' }
+          if ($current.Trim() -ne $env:GITHUB_SHA) {
+            Write-Output 'Newer source exists; keeping this build as an artifact without replacing the current release.'
+            exit 0
+          }
+          gh release view assistant-v0.1.1 --repo $env:GITHUB_REPOSITORY 2>$null
           if ($LASTEXITCODE -ne 0) {
-            gh release create assistant-v0.1.0 --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title 'iPad 安装与续签助手 v0.1.0' --notes-file windows-assistant/START-HERE.md --latest
+            gh release create assistant-v0.1.1 --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title 'iPad 安装与续签助手 v0.1.1' --notes-file windows-assistant/START-HERE.md --latest
             if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
           }
-          gh release upload assistant-v0.1.0 StS2-iPad-Assistant-Setup.exe StS2-iPad-Assistant-portable.zip SHA256SUMS.txt --repo $env:GITHUB_REPOSITORY --clobber
+          gh release upload assistant-v0.1.1 StS2-iPad-Assistant-Setup.exe StS2-iPad-Assistant-portable.zip SHA256SUMS.txt --repo $env:GITHUB_REPOSITORY --clobber
           if ($LASTEXITCODE -ne 0) { throw 'Release upload failed' }
       - name: Publish final status
         if: always()

@@ -8,7 +8,7 @@
 
 ## 下载与开始使用
 
-[**下载页面 →**](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/releases/tag/assistant-v0.1.0)（Windows 构建成功后提供安装器） · [构建进度](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/actions/workflows/build-assistant.yml) · [详细新手指南](windows-assistant/START-HERE.md)
+[**下载页面 →**](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/releases/tag/assistant-v0.1.1)（Windows 构建成功后提供安装器） · [构建进度](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/actions/workflows/build-assistant.yml) · [详细新手指南](windows-assistant/START-HERE.md)
 
 | 首次安装需要 | 后续续签需要 |
 |---|---|

@@ -21,6 +21,7 @@ export default function App() {
   const { err } = useError();
   const [loggedInAs, setLoggedInAs] = useState<string | null>(null);
   const [device, setDevice] = useState<DeviceInfo | null>(null);
+  const [driverReady, setDriverReady] = useState<boolean | null>(null);
   const [noKeyring, setNoKeyring] = useState(false);
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState<{mode: Mode; ipa: string} | null>(null);
@@ -36,6 +37,7 @@ export default function App() {
   const refresh = useRef<(() => void) | null>(null);
 
   useEffect(() => {
+    action('environment').then(r => setDriverReady(!!r.driver_ready)).catch(() => setDriverReady(false));
     invoke<boolean>('keyring_available').then(v => setNoKeyring(!v)).catch(() => setNoKeyring(true));
     load('preferences.json').then(async s => setLastSuccess((await s.get<string>('sts2LastSuccess')) ?? ''));
     let dispose: (() => void) | undefined;
@@ -61,6 +63,7 @@ export default function App() {
       setMessage('正在检查电脑环境。缺少 Apple 组件时会自动下载，请亲自确认 Windows 管理员授权。');
       const env=await action('environment');
       if (!env.driver_ready) await invoke('sts2_driver_setup');
+      setDriverReady(true);
       refresh.current?.();
       setStage(2);setMessage(mode==='install'?'正在识别游戏并准备安装文件。':'正在校验续签安装包；不会重新生成或传输资源。');
       const files=await action(mode==='install'?'prepare':'payload',{game:gameFolder || null});
@@ -144,7 +147,8 @@ export default function App() {
       <AppleID loggedInAs={loggedInAs} setLoggedInAs={setLoggedInAs} noKeyringAvailable={noKeyring} />
     </section><section className="device-column" inert={busy}><h2>2 · USB iPad</h2>
       <p>解锁后点“信任此电脑”。只连接一台时会自动选择；首次开启开发者模式仍需在 iPad 上完成。</p>
-      <Device selectedDevice={device} setSelectedDevice={setDevice} registerRefresh={fn=>{refresh.current=fn??null;}} />
+      {driverReady ? <Device selectedDevice={device} setSelectedDevice={setDevice} registerRefresh={fn=>{refresh.current=fn??null;}} />
+        : <p role="status">{driverReady===null ? '正在检查 Apple USB 通信组件…' : '尚未检测到 Apple USB 通信组件。点击“一键安装 / 配置”或“一键续签”，助手会自动下载并安装；Windows 管理员授权由你确认。'}</p>}
       <details><summary>未自动找到 Steam 游戏？</summary><p>{gameFolder||'默认自动识别 Steam 安装目录和其他库。'}</p>
         <button disabled={busy||!!pending} onClick={async()=>{const path=await open({directory:true,multiple:false,title:'选择 Slay the Spire 2 游戏文件夹'});if(typeof path==='string')setGameFolder(path);}}>选择游戏文件夹</button></details>
       {backupFolder && <p className="backup">本次存档备份已保留在：<code>{backupFolder}</code></p>}

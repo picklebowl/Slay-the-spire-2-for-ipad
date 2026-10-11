@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -30,6 +31,12 @@ def main():
     shutil.copy2(a.source/'LICENSE',target/'ILOADER-LICENSE.txt')
     shutil.copy2(a.source/'LICENSE-BRANDING',target/'ILOADER-BRANDING.txt')
     shutil.copy2(ROOT/'UPSTREAM-LICENSE.txt',target/'PORT-UPSTREAM-LICENSE.txt')
+    (target/'build-info.json').write_text(json.dumps({
+        'assistant_version':'0.1.1',
+        'assistant_source_commit':os.environ.get('GITHUB_SHA'),
+        'iloader_source_commit':'dc396af059fd46982062cd8fc90252d7e27085e9',
+        'game_version':spec['game_version'], 'ipa_sha256':spec['ipa_sha256'],
+    },indent=2),encoding='utf-8')
     archive=a.source/'python-embed.zip'
     with urllib.request.urlopen(PYTHON_URL,timeout=60) as response,archive.open('wb') as file: shutil.copyfileobj(response,file)
     with archive.open('rb') as f: assert hashlib.file_digest(f,'md5').hexdigest()==PYTHON_MD5

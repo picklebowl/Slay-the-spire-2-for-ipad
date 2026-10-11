@@ -41,7 +41,7 @@ def main():
     replace(src/'src/AppleID.tsx','<p className="certs-desc">{t("apple_id.max_certs_desc")}</p>',
             '<p className="certs-desc">Apple 的开发证书数量已满。只有你勾选的证书会被撤销；使用该证书的其他应用可能失效。不确定时请取消。</p>')
     config=src/'src-tauri/tauri.conf.json'; data=json.loads(config.read_text(encoding='utf-8'))
-    data['productName']='StS2 iPad Assistant';data['version']='0.1.0';data['identifier']='com.picklebowl.sts2assistant'
+    data['productName']='StS2 iPad Assistant';data['version']='0.1.1';data['identifier']='com.picklebowl.sts2assistant'
     data['app']['windows'][0].update(title='杀戮尖塔2 · iPad 安装与续签助手',width=1120,height=840,minWidth=750,minHeight=600)
     data['bundle'].update(targets=['nsis'],createUpdaterArtifacts=False,resources={'../payload/':'payload/'})
     data['bundle']['windows']={'nsis':{'displayLanguageSelector':False,'languages':['SimpChinese'],'installMode':'currentUser'},'webviewInstallMode':{'type':'downloadBootstrapper'}}
