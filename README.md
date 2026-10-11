@@ -8,7 +8,10 @@
 云端 NativeAOT 编译、Xcode 归档、IPA 打包已通过：
 [成功构建](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/actions/runs/38114209469)。
 IPA 为 53,309,950 字节，已校验 arm64 游戏原生库、FMOD/Spine 依赖、ZIP 与文件哈希。
-真机安装、离线游玩与性能测试仍待完成；编译存在 AOT 反射/动态代码告警，需通过实际玩法覆盖验证。
+真机已签名安装并完整校验 Documents 资源包，开发者模式已启用。
+首次启动在 Godot 图标后闪退；设备崩溃栈指向 FMOD 插件加载入口，旧主程序缺少该动态导出。
+已修正链接器保留和导出设置，打包时必须检查真实 dyld 导出表；修复版仍需真机复测。
+离线游玩与性能测试仍待完成；编译存在 AOT 反射/动态代码告警，需通过实际玩法覆盖验证。
 
 ## 构建
 
@@ -24,7 +27,7 @@ GitHub Actions 的 `Build offline iPad IPA` 在 macOS 运行器编译 AOT 并打
 
 1. 从私有 Actions 下载 IPA 和 `cs_paths.txt`。
 2. 在 Windows 上运行 `python tools/prepare_content.py --game "你的Steam游戏目录" --paths "下载的cs_paths.txt" --out "本地StS2.pck"`。
-3. 用 SideStore/AltStore 等工具以自己的 Apple ID 重新签名安装 IPA。
+3. 用 iloader 等工具以自己的 Apple ID 重新签名安装 IPA。
 4. 通过 Apple Devices 文件共享，将处理后的 `StS2.pck` 放到 App 的 Documents。
 5. 关闭 Wi-Fi 并开启飞行模式，结束 App 进程后重新启动，进行完整单机测试。
 

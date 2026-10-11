@@ -1,5 +1,6 @@
 import sys,shutil,subprocess,plistlib,json,zipfile,hashlib
 from pathlib import Path
+from verify_native_exports import verify_fmod_loader
 archive=Path(sys.argv[1]); output=Path(sys.argv[2])
 apps=list((archive/'Products/Applications').glob('*.app'))
 assert len(apps)==1, 'Expected exactly one archived app'
@@ -13,6 +14,7 @@ info.update(UIFileSharingEnabled=True,LSSupportsOpeningDocumentsInPlace=True,
     UIDeviceFamily=[2],godot_cmdline=['--main-pack','user://StS2.pck','--rendering-method','mobile','--','nomods'],
     UISupportedInterfaceOrientations=['UIInterfaceOrientationLandscapeLeft','UIInterfaceOrientationLandscapeRight'])
 assert (app/info['CFBundleExecutable']).is_file(), 'Main executable missing'
+loader_address=verify_fmod_loader(app/info['CFBundleExecutable'])
 plist.write_bytes(plistlib.dumps(info))
 for p in app.glob('*.pck'):p.unlink()
 ent=output.parent/'entitlements.plist'
@@ -37,6 +39,7 @@ with zipfile.ZipFile(output) as z:
 manifest={'ipa_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),
     'bytes':output.stat().st_size,'game_version':'v0.111.0',
     'bundle_id':info['CFBundleIdentifier'], 'runtime':'NativeAOT; no JIT',
+    'fmod_plugin_loader_export':hex(loader_address),
     'status':'Build only; iPad Air device/offline/performance tests pending'}
 (output.parent/'build-manifest.json').write_text(json.dumps(manifest,indent=2))
 print(json.dumps(manifest,indent=2))
