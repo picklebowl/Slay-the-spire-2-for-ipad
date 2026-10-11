@@ -1,0 +1,26 @@
+{
+  "file": "private-build-inputs.zip",
+  "size": 6226626,
+  "sha256": "fecc9711438a8f848221533850fc360eb8eaf43a3cee29489e0df256f22be394",
+  "managed_assemblies": [
+    "0Harmony.dll",
+    "GodotSharp.dll",
+    "JetBrains.Annotations.dll",
+    "MonoMod.Backports.dll",
+    "MonoMod.ILHelpers.dll",
+    "Sentry.dll",
+    "Sentry.Godot.dll",
+    "SharpGen.Runtime.COM.dll",
+    "SharpGen.Runtime.dll",
+    "SmartFormat.dll",
+    "SmartFormat.ZString.dll",
+    "Steamworks.NET.dll",
+    "sts2.dll",
+    "System.IO.Hashing.dll",
+    "Vortice.DirectX.dll",
+    "Vortice.DXGI.dll",
+    "Vortice.Mathematics.dll"
+  ],
+  "version": "v0.111.0",
+  "original_assembly_sha256": "0861bfa1df347538d932f22d580e75420f08082792eb914e53b4882764acdbe9"
+}

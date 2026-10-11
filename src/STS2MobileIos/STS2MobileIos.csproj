@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AssemblyName>STS2MobileIos</AssemblyName>
+    <RootNamespace>STS2MobileIos</RootNamespace>
+    <GameRefsDir Condition="'$(GameRefsDir)' == ''">../../game-refs</GameRefsDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="sts2">
+      <HintPath>$(GameRefsDir)/sts2.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="GodotSharp">
+      <HintPath>$(GameRefsDir)/GodotSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Patches/CardAdvisor.cs;Patches/CardAdvisorPatch.cs;Patches/QuickRestartPatch.cs;Patches/SnapshotPatch.cs;Patches/TimeScalePatch.cs;Patches/SyncImportPatch.cs;Patches/ModelDbInitPatch.cs" />
+  </ItemGroup>
+
+</Project>

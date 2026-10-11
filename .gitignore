@@ -1,0 +1,18 @@
+**/bin/
+**/obj/
+**/.godot/
+build/
+work/
+ios-export/prebuilt/
+ios-export/addons/
+game-refs/
+*.pck
+*.ipa
+*.xcarchive/
+*.p12
+*.mobileprovision
+# The single private CI input archive is explicitly named; other game files
+# must never accidentally enter the repository.
+*.dll
+*.dylib
+*.a

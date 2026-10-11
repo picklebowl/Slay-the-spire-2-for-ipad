@@ -1,0 +1,35 @@
+name: Build offline iPad IPA
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    if: github.event.repository.private == true
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.318'
+      - name: Prepare Godot and native extensions
+        shell: bash
+        run: bash tools/setup_cloud.sh
+      - name: Compile AOT and package IPA
+        shell: bash
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+        run: bash tools/build_cloud.sh
+      - name: Upload private build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: StS2-iPad-unsigned
+          path: |
+            build/StS2-iPad-unsigned.ipa
+            build/cs_paths.txt
+            build/build-manifest.json
+          retention-days: 3
+          if-no-files-found: error
