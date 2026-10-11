@@ -62,10 +62,11 @@ export default function App() {
       if (!loggedInAs) {
         const prefs=await load('preferences.json');const saved=await load('data.json');
         const email=await prefs.get<string>('sts2Account');const ids=(await saved.get<string[]>('ids'))??[];
-        if (email && ids.includes(email) && !noKeyring) {
+        const storedEmail=email ? ids.find(id=>id.toLowerCase()===email.toLowerCase()) : undefined;
+        if (storedEmail && !noKeyring) {
           setMessage('正在使用你此前明确保存的账号续签。若 Apple 要求验证，请亲自完成。');
           try {
-            await invoke('login_stored',{email,anisetteServer:'ani.sidestore.io'});
+            await invoke('login_stored',{email:storedEmail,anisetteServer:'ani.sidestore.io'});
             setLoggedInAs(await invoke<string>('logged_in_as'));
           } catch { setMessage('保存的登录暂不可用，请在账号区域亲自登录并完成验证。'); }
         }

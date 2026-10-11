@@ -19,7 +19,8 @@ BUNDLE_PREFIX = 'com.picklebowl.sts2.ipad'
 
 def emit(message=None, **values):
     if message is not None: values['message'] = message
-    print(json.dumps(values, ensure_ascii=False), flush=True)
+    # JSON escapes make the pipe independent of the Windows console code page.
+    print(json.dumps(values, ensure_ascii=True), flush=True)
 
 def sha(path):
     with Path(path).open('rb') as f: return hashlib.file_digest(f, 'sha256').hexdigest()

@@ -54,7 +54,7 @@ class Tests(unittest.TestCase):
         self.assertNotIn('/Documents/StS2.pck',afc.files);self.assertEqual(afc.renames,[])
     def test_corrupt_readback_never_activates(self):
         afc=Afc(corrupt=True)
-        with self.assertRaises(ValueError):self.upload(afc)
+        with self.assertRaisesRegex(ValueError,'资源读回校验失败'):self.upload(afc)
         self.assertNotIn('/Documents/StS2.pck',afc.files);self.assertEqual(afc.renames,[])
     def test_same_resource_is_not_rewritten(self):
         afc=Afc({'/Documents/StS2.pck':self.data});r=self.upload(afc)
