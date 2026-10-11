@@ -38,6 +38,7 @@ dotnet publish "$EXPORT/sts2.csproj" -c ExportRelease -r ios-arm64 \
 PUB="$EXPORT/.godot/mono/temp/bin/ExportRelease/ios-arm64/publish/sts2.dylib"
 test -s "$PUB"
 file "$PUB" | grep -q arm64
+test -f "$EXPORT/sts2.sln" # Godot requires a solution to enable the C# export plugin.
 # Allow deferred GDExtension documentation tasks to finish before shutdown.
 # --import quits immediately after scanning and races Godot 4.5.1's deferred
 # extension docs queue against destruction of EditorSettings.
@@ -48,6 +49,7 @@ file "$PUB" | grep -q arm64
   test -d "$ROOT/build/StS2.xcodeproj" || exit 1
 }
 python3 tools/prepare_xcode.py build
+grep -q 'sts2_aot' build/StS2.xcodeproj/project.pbxproj
 cd "$ROOT/build"
 xcodebuild -project StS2.xcodeproj -scheme StS2 -configuration Release \
   -destination 'generic/platform=iOS' -archivePath StS2.xcarchive archive \

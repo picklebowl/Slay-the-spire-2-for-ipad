@@ -18,6 +18,10 @@ for p in app.glob('*.pck'):p.unlink()
 ent=output.parent/'entitlements.plist'
 ent.write_bytes(plistlib.dumps({'com.apple.developer.kernel.increased-memory-limit':True}))
 frameworks=app/'Frameworks'
+game_native=frameworks/'sts2.framework/sts2'
+assert game_native.is_file() and game_native.stat().st_size>1024*1024, 'Game NativeAOT framework missing'
+subprocess.run(['file',str(game_native)],check=True)
+assert b'arm64' in subprocess.check_output(['file',str(game_native)])
 for p in sorted(frameworks.rglob('*.framework'),key=lambda x:len(x.parts),reverse=True):
     subprocess.run(['codesign','--force','--sign','-',str(p)],check=True)
 for p in frameworks.rglob('*.dylib'):
@@ -28,6 +32,7 @@ subprocess.run(['zip','-qry',str(output.resolve()),'Payload'],cwd=stage.parent,c
 with zipfile.ZipFile(output) as z:
     assert not any(n.endswith('.pck') for n in z.namelist())
     bundled=plistlib.loads(z.read('Payload/'+app.name+'/Info.plist'))
+    assert 'Payload/'+app.name+'/Frameworks/sts2.framework/sts2' in z.namelist()
     assert bundled['godot_cmdline'][1]=='user://StS2.pck'
 manifest={'ipa_sha256':hashlib.file_digest(output.open('rb'),'sha256').hexdigest(),
     'bytes':output.stat().st_size,'game_version':'v0.111.0',
