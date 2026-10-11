@@ -5,8 +5,10 @@
 安装采用用户接受的免费签名侧载；免费签名周期约 7 天，需要定期联网续签。
 
 目前状态：Windows 上补丁编译成功，针对用户 v0.111.0 程序集的 35 处静态修改成功。
-云端已生成 iOS arm64 AOT 代码和 Xcode 归档；检查发现缺少解决方案文件，导致 C# 原生库未打包。
-已补齐导出识别与原生库完整性检查，重跑中。真机测试仍待完成。
+云端 NativeAOT 编译、Xcode 归档、IPA 打包已通过：
+[成功构建](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/actions/runs/38114209469)。
+IPA 为 53,309,950 字节，已校验 arm64 游戏原生库、FMOD/Spine 依赖、ZIP 与文件哈希。
+真机安装、离线游玩与性能测试仍待完成；编译存在 AOT 反射/动态代码告警，需通过实际玩法覆盖验证。
 
 ## 构建
 
@@ -15,6 +17,7 @@
 
 GitHub Actions 的 `Build offline iPad IPA` 在 macOS 运行器编译 AOT 并打包
 `StS2-iPad-unsigned.ipa`。该 IPA 使用 ad-hoc 签名供侧载工具重新签名，不能直接装到普通 iPad。
+已验证 IPA SHA256：`eb0d3c85ce23109056a8af4e1795cb60cf4fd897197b37d87101b1619cb40ef0`。
 `application/app_store_team_id` 的零值仅用于无证书导出，不是用户的开发者身份。
 
 ## 安装和资源
