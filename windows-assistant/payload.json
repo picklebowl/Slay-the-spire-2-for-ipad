@@ -1,0 +1,11 @@
+{
+  "game_version": "v0.111.0",
+  "app_version": "0.111.0",
+  "original_assembly_sha256": "0861bfa1df347538d932f22d580e75420f08082792eb914e53b4882764acdbe9",
+  "ipa_bytes": 56808716,
+  "ipa_sha256": "5173e27191a37163b912e9a04df5a3a98f9dbf35cd16cd05b65c318844b21877",
+  "resource_bytes": 1990777592,
+  "resource_sha256": "722ddd61a3c74953c67e8e38e3d6153119a5c8725667994c1e360f96a8c18ceb",
+  "validated_ipa_run": 38117720910,
+  "upstream_iloader_commit": "dc396af059fd46982062cd8fc90252d7e27085e9"
+}

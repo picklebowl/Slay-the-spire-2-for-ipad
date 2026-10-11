@@ -16,3 +16,6 @@ game-refs/
 *.dll
 *.dylib
 *.a
+**/__pycache__/
+assistant-source/
+package/

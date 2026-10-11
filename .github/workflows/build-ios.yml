@@ -2,6 +2,13 @@ name: Build offline iPad IPA
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'ios-export/**'
+      - 'tools/**'
+      - 'private-build-inputs.zip'
+      - 'private-inputs-manifest.json'
+      - '.github/workflows/build-ios.yml'
   workflow_dispatch:
 permissions:
   contents: read
