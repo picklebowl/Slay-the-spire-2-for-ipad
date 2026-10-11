@@ -165,6 +165,20 @@ void WeaveOne(PatchEntry p)
     if (target.HasGenericParameters) throw new InvalidOperationException("不支持泛型目标方法");
     if (!target.HasBody) throw new InvalidOperationException("目标方法无方法体");
 
+    // Some desktop assemblies invoke Sentry from a module initializer, before
+    // Godot startup hooks can run. An unconditional void no-op removes that
+    // native call from both the execution path and the AOT reachable graph.
+    if (p.Kind.Equals("disable_void", StringComparison.OrdinalIgnoreCase))
+    {
+        if (target.ReturnType.MetadataType != MetadataType.Void)
+            throw new InvalidOperationException("disable_void requires a void method");
+        target.Body.Instructions.Clear();
+        target.Body.ExceptionHandlers.Clear();
+        target.Body.Variables.Clear();
+        target.Body.GetILProcessor().Append(Instruction.Create(OpCodes.Ret));
+        return;
+    }
+
     var hookTypeDef = hooksAsm.MainModule.GetType(p.HookType)
         ?? throw new InvalidOperationException($"钩子类型不存在: {p.HookType}");
     var hook = hookTypeDef.Methods.SingleOrDefault(m => m.Name == p.HookMethod && m.IsStatic && m.IsPublic)

@@ -38,7 +38,10 @@ dotnet publish "$EXPORT/sts2.csproj" -c ExportRelease -r ios-arm64 \
 PUB="$EXPORT/.godot/mono/temp/bin/ExportRelease/ios-arm64/publish/sts2.dylib"
 test -s "$PUB"
 file "$PUB" | grep -q arm64
-"$GODOT_BIN" --headless --editor --import --path "$EXPORT"
+# Allow deferred GDExtension documentation tasks to finish before shutdown.
+# --import quits immediately after scanning and races Godot 4.5.1's deferred
+# extension docs queue against destruction of EditorSettings.
+"$GODOT_BIN" --headless --editor --path "$EXPORT" --quit-after 120
 # Godot may attempt signing after generating the Xcode project; this build's
 # archive is signed on the user's device instead. Require the project itself.
 "$GODOT_BIN" --headless --path "$EXPORT" --export-release iOS "$ROOT/build/StS2.ipa" || {

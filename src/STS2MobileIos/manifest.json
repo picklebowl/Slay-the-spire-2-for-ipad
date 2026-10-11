@@ -241,6 +241,13 @@
       "kind": "prefix",
       "hookType": "STS2MobileIos.Patches.OfflinePatches",
       "hookMethod": "SkipTaskPrefix"
+    },
+    {
+      "targetType": "SentryAutoInit",
+      "targetMethod": "Init",
+      "kind": "disable_void",
+      "hookType": "STS2MobileIos.Patches.PlatformPatches",
+      "hookMethod": "SkipPrefix"
     }
   ]
 }
