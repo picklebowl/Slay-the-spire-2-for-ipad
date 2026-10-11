@@ -54,6 +54,8 @@ cd "$ROOT/build"
 xcodebuild -project StS2.xcodeproj -scheme StS2 -configuration Release \
   -destination 'generic/platform=iOS' -archivePath StS2.xcarchive archive \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' \
-  DEVELOPMENT_TEAM='' CODE_SIGN_STYLE=Manual
+  DEVELOPMENT_TEAM='' CODE_SIGN_STYLE=Manual STRIP_INSTALLED_PRODUCT=NO
 cd "$ROOT"
+# Keep a compact independent linker diagnostic alongside the trie assertion.
+xcrun nm -gU build/StS2.xcarchive/Products/Applications/StS2.app/StS2 | grep '_load_all_fmod_plugins$'
 python3 tools/package_ipa.py build/StS2.xcarchive build/StS2-iPad-unsigned.ipa

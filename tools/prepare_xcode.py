@@ -10,7 +10,8 @@ text=text.replace('Apple Distribution','Apple Development')
 # the linker retains it. Export it for dyld's dynamic-lookup binding as well.
 def retain_fmod_loader(match):
     flags=match.group(2)
-    for flag in ('-Wl,-u,_load_all_fmod_plugins','-Wl,-export_dynamic'):
+    for flag in ('-Wl,-u,_load_all_fmod_plugins','-Wl,-export_dynamic',
+                 '-Wl,-exported_symbol,_main','-Wl,-exported_symbol,_load_all_fmod_plugins'):
         if flag not in flags:
             flags+=' '+flag
     return match.group(1)+flags+match.group(3)
