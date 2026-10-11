@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  statuses: write
 jobs:
   build:
     if: github.event.repository.private == true
@@ -12,6 +13,10 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+      - name: Publish build run link
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/report_ci_status.py pending
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.318'
@@ -33,3 +38,8 @@ jobs:
             build/build-manifest.json
           retention-days: 3
           if-no-files-found: error
+      - name: Publish build result
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/report_ci_status.py '${{ job.status }}'
