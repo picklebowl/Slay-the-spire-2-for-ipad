@@ -4,11 +4,11 @@
 
 游戏原生运行在 iPad，可离线游玩；无需 Mac、越狱、JIT 或电脑串流。首次安装从你已购买的 Steam 游戏处理资源，不需要手动运行脚本、编译或传文件。
 
-> 当前状态：原生游戏移植已在 iPad Air 2025 完成真机验收，连续离线游玩至少 30 分钟顺滑。新的安装助手已通过前端编译与 20 项本地数据安全测试；Windows 安装器构建、干净环境安装和真机一键续签仍在验证中。请勿将原游戏验收视为新助手已全部通过。
+> 当前状态：原生游戏移植已在 iPad Air 2025 完成真机验收，连续离线游玩至少 30 分钟顺滑。安装助手 v0.1.1 已完成 Windows 原生编译、安装器和便携版打包，并发布到私有下载页面；20 项数据安全测试和本地包校验已通过。助手界面、干净环境首次安装和真机续签有效期延长仍待验收。请勿将原游戏验收视为新助手已全部通过。
 
 ## 下载与开始使用
 
-[**下载页面 →**](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/releases/tag/assistant-v0.1.1)（Windows 构建成功后提供安装器） · [构建进度](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/actions/workflows/build-assistant.yml) · [详细新手指南](windows-assistant/START-HERE.md)
+[**下载 Windows 安装器 →**](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/releases/tag/assistant-v0.1.1)（登录获授权的 GitHub 账号后下载 `StS2-iPad-Assistant-Setup.exe`） · [构建记录](https://github.com/picklebowl/Slay-the-spire-2-for-ipad/actions/workflows/build-assistant.yml) · [详细新手指南](windows-assistant/START-HERE.md)
 
 | 首次安装需要 | 后续续签需要 |
 |---|---|
