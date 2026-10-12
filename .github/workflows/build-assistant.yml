@@ -85,7 +85,7 @@ jobs:
         run: |
           gh release view game-build-v0.111.0 --repo $env:GITHUB_REPOSITORY 2>$null
           if ($LASTEXITCODE -ne 0) {
-            gh release create game-build-v0.111.0 --repo $env:GITHUB_REPOSITORY --target ae02eef29f48a8ed142f0c2fc1469673565993ce --title '已验证的私有游戏构建 v0.111.0' --prerelease --notes '仅用于助手打包；包含合法个人游戏副本的构建，不得公开。'
+            gh release create game-build-v0.111.0 --repo $env:GITHUB_REPOSITORY --target main --title '已验证的私有游戏构建 v0.111.0' --prerelease --notes '仅用于助手打包；游戏 IPA 原始构建为 ae02eef29f48a8ed142f0c2fc1469673565993ce，打包前验证固定 SHA256。不得公开。'
             if ($LASTEXITCODE -ne 0) { throw 'Private build release creation failed' }
           }
           gh release upload game-build-v0.111.0 ipa-input/StS2-iPad-unsigned.ipa ipa-input/cs_paths.txt --repo $env:GITHUB_REPOSITORY --clobber
@@ -98,7 +98,7 @@ jobs:
           }
           gh release view assistant-v0.1.1 --repo $env:GITHUB_REPOSITORY 2>$null
           if ($LASTEXITCODE -ne 0) {
-            gh release create assistant-v0.1.1 --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title 'iPad 安装与续签助手 v0.1.1' --notes-file windows-assistant/START-HERE.md --latest
+            gh release create assistant-v0.1.1 --repo $env:GITHUB_REPOSITORY --target main --title 'iPad 安装与续签助手 v0.1.1' --notes-file windows-assistant/START-HERE.md --latest
             if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
           }
           gh release upload assistant-v0.1.1 StS2-iPad-Assistant-Setup.exe StS2-iPad-Assistant-portable.zip SHA256SUMS.txt --repo $env:GITHUB_REPOSITORY --clobber
